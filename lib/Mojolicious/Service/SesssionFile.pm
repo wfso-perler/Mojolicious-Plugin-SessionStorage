@@ -3,6 +3,7 @@ use Mojo::Base 'Mojolicious::Service';
 
 use Mojo::JSON qw/from_json to_json/;
 use Mojo::File 'path';
+use Mojo::ByteStream 'b';
 
 has path => "session";
 
@@ -37,7 +38,7 @@ sub store{
   my $session_id = shift;
   my $session = shift;
   my $home = $self->app->home;
-  $home->child($self->path, $session_id)->spurt(to_json($session));
+  $home->child($self->path, $session_id)->spurt(b(to_json($session))->encode("utf8"));
 }
 
 
