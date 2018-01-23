@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious::Service';
 
 use Mojo::JSON qw/from_json to_json/;
 use Mojo::File 'path';
-use Mojo::ByteStream 'b';
+use Encode qw/decode_utf8 encode_utf8/;
 
 has path => "session";
 
@@ -14,7 +14,7 @@ sub fetch{
   my $file = $home->child($self->path, $session_id);
   my $file_content = -e $file ? $file->slurp : undef;
   if($file_content){
-    my $session = from_json($file_content);
+    my $session = from_json(decode_utf8 $file_content);
     if($session){
       if($session->{expires} && $session->{expires} > time){
         return $session;
@@ -38,7 +38,7 @@ sub store{
   my $session_id = shift;
   my $session = shift;
   my $home = $self->app->home;
-  $home->child($self->path, $session_id)->spurt(b(to_json($session))->encode("utf8"));
+  $home->child($self->path, $session_id)->spurt(encode_utf8(to_json($session)));
 }
 
 
