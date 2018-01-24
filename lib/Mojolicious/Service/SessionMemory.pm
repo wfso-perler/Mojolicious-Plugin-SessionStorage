@@ -1,5 +1,5 @@
-package Mojolicious::Sessions::Storage::Memory;
-use Mojo::Base -base;
+package Mojolicious::Service::SessionMemory;
+use Mojo::Base 'Mojolicious::Service';
 
 has storage => sub{{}};
 
@@ -21,7 +21,7 @@ sub fetch{
 sub remove{
   my $self = shift;
   my $session_id = shift;
-  delete $self->storage->{$session_id};
+  delete $self->storage->{$session_id} if(defined $session_id && $session_id ne "");
 }
 
 sub store{

@@ -1,4 +1,4 @@
-package Mojolicious::Service::SesssionFile;
+package Mojolicious::Service::SessionFile;
 use Mojo::Base 'Mojolicious::Service';
 
 use Mojo::JSON qw/from_json to_json/;
@@ -30,7 +30,7 @@ sub remove{
   my $self = shift;
   my $session_id = shift;
   my $home = $self->app->home;
-  $home->child($self->path, $session_id)->remove_tree;
+  $home->child($self->path, $session_id)->remove_tree if(defined $session_id && $session_id ne "");
 }
 
 sub store{
